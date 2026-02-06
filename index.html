@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpina Automotores</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #222;
+            background: #fafafa;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-title {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logo-container {
+            width: 70px;
+            height: 70px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        .company-address {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 0.5rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .admin-toggle {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            border-radius: 6px;
+            color: #fff;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+
+        .admin-toggle:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Cars Grid */
+        .cars-section {
+            padding: 3rem 0;
+            background: #fff;
+        }
+
+        .cars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .car-card {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .car-card:hover {
+            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.15);
+            transform: translateY(-4px);
+            border-color: #dc2626;
+        }
+
+        .car-image-container {
+            position: relative;
+            height: 240px;
+            background: #f5f5f5;
+            overflow: hidden;
+        }
+
+        .car-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.2s;
+            color: #dc2626;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .car-card:hover .image-nav {
+            opacity: 1;
+        }
+
+        .image-nav:hover {
+            background: #dc2626;
+            color: #fff;
+            border-color: #dc2626;
+        }
+
+        .image-nav.prev {
+            left: 0.5rem;
+        }
+
+        .image-nav.next {
+            right: 0.5rem;
+        }
+
+        .image-dots {
+            position: absolute;
+            bottom: 0.75rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.375rem;
+            background: rgba(0,0,0,0.3);
+            padding: 0.375rem 0.625rem;
+            border-radius: 12px;
+            backdrop-filter: blur(4px);
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: #dc2626;
+            transform: scale(1.2);
+        }
+
+        .car-details {
+            padding: 1.5rem;
+        }
+
+        .car-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #222;
+            border-left: 3px solid #dc2626;
+            padding-left: 0.75rem;
+        }
+
+        .car-specs {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: #666;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .spec-item:last-child {
+            border-bottom: none;
+        }
+
+        .spec-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .spec-value {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .car-price {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #dc2626;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #fee2e2;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .car-price::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(to bottom, #dc2626, #b91c1c);
+            border-radius: 2px;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: linear-gradient(to bottom, #fff 0%, #fef2f2 100%);
+            padding: 4rem 0;
+            border-top: 3px solid #dc2626;
+            position: relative;
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .contact-info h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #222;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .contact-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            border: 2px solid #e5e5e5;
+            background: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #222;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .contact-btn:hover {
+            border-color: #dc2626;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .contact-btn svg {
+            color: #dc2626;
+        }
+
+        /* Admin Panel Styles */
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        .admin-content {
+            max-width: 900px;
+            margin: 2rem auto;
+            background: #fff;
+            border-radius: 8px;
+            padding: 2rem;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e5e5e5;
+        }
+
+        .close-admin {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-size: 0.9375rem;
+            color: #666;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: #dc2626;
+            border-bottom-color: #dc2626;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            color: #444;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.625rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9375rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: #fff;
+            border: none;
+            padding: 0.875rem 1.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+            box-shadow: 0 6px 16px rgba(220, 38, 38, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #fff;
+            color: #666;
+            border: 2px solid #e5e5e5;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9375rem;
+            margin-left: 0.5rem;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .btn-secondary:hover {
+            border-color: #dc2626;
+            color: #dc2626;
+            background: #fef2f2;
+        }
+
+        .image-upload-area {
+            border: 2px dashed #dc2626;
+            border-radius: 8px;
+            padding: 2.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #fef2f2;
+        }
+
+        .image-upload-area:hover {
+            border-color: #b91c1c;
+            background: #fee2e2;
+        }
+
+        .image-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .preview-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #e5e5e5;
+        }
+
+        .preview-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            background: #dc2626;
+            color: #fff;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .spec-manager {
+            background: #fafafa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .spec-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: #fff;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        .spec-handle {
+            cursor: move;
+            color: #999;
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .contact-content {
+                grid-template-columns: 1fr;
+            }
+            .cars-grid {
+                grid-template-columns: 1fr;
+            }
+            h1 {
+                font-size: 1.5rem;
+                letter-spacing: 2px;
+            }
+            .logo-container {
+                width: 50px;
+                height: 50px;
+            }
+            .company-address {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-title">
+                    <div class="logo-container" id="logoContainer">
+                        <img class="logo-img" id="logoImg" src="" alt="Alpina Automotores">
+                    </div>
+                    <div>
+                        <h1>ALPINA AUTOMOTORES</h1>
+                        <div class="company-address" id="companyAddress">Calle 123, La Plata, Buenos Aires</div>
+                    </div>
+                </div>
+                <button class="admin-toggle" onclick="showLogin()">ADMIN</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="cars-section">
+            <div class="container">
+                <div class="cars-grid" id="carsGrid"></div>
+            </div>
+        </section>
+
+        <section class="contact-section">
+            <div class="container">
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <h2>Contacto</h2>
+                        <div class="contact-buttons">
+                            <a href="#" class="contact-btn" id="whatsappBtn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                                </svg>
+                                <span id="whatsappText">WhatsApp</span>
+                            </a>
+                            <a href="#" class="contact-btn" id="phoneBtn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                </svg>
+                                <span id="phoneText">Llamar</span>
+                            </a>
+                            <a href="#" class="contact-btn" id="instagramBtn" target="_blank">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                </svg>
+                                <span id="instagramText">Instagram</span>
+                            </a>
+                            <a href="#" class="contact-btn" id="mapsBtn" target="_blank">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                                <span id="mapsText">Ver en Google Maps</span>
+                            </a>
+                        </div>
+                        <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(220, 38, 38, 0.05); border-radius: 8px; border-left: 3px solid #dc2626;">
+                            <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; color: #dc2626;">Horarios de Atención</h3>
+                            <p id="businessHours" style="font-size: 0.875rem; color: #666; line-height: 1.6; margin: 0;">Lunes a Viernes: 9:00 - 18:00<br>Sábados: 9:00 - 13:00</p>
+                        </div>
+                    </div>
+                    <div class="contact-map">
+                        <iframe id="mapFrame" width="100%" height="400" style="border:0; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3271.845406162872!2d-57.954698!3d-34.921437!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzTCsDU1JzE3LjIiUyA1N8KwNTcnMTYuOSJX!5e0!3m2!1ses!2sar!4v1234567890!5m2!1ses!2sar"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-content">
+            <div id="loginView">
+                <h3>Admin Login</h3>
+                <div class="form-group">
+                    <input type="password" id="adminPassword" placeholder="Password">
+                </div>
+                <button class="btn-primary" onclick="login()">Login</button>
+            </div>
+
+            <div id="adminView" style="display: none;">
+                <div class="admin-header">
+                    <h2>Panel de Administración</h2>
+                    <button class="close-admin" onclick="closeAdmin()">×</button>
+                </div>
+
+                <div class="admin-tabs">
+                    <button class="tab-btn active" onclick="switchTab('cars')">Gestionar Autos</button>
+                    <button class="tab-btn" onclick="switchTab('specs')">Características</button>
+                    <button class="tab-btn" onclick="switchTab('logo')">Logo</button>
+                    <button class="tab-btn" onclick="switchTab('contact')">Contacto</button>
+                </div>
+
+                <!-- Cars Tab -->
+                <div id="carsTab" class="tab-content active">
+                    <button class="btn-primary" onclick="showAddCar()" style="margin-bottom: 1rem;">Añadir Auto</button>
+                    <div id="carsList"></div>
+                    
+                    <!-- Add/Edit Car Form -->
+                    <div id="carForm" style="display:none; background:#f5f5f5; padding:1.5rem; border-radius:8px; margin-top:1rem;">
+                        <h3 id="formTitle">Añadir Auto</h3>
+                        <input type="hidden" id="editCarId">
+                        
+                        <div class="form-group">
+                            <label>Marca</label>
+                            <input type="text" id="carBrand">
+                        </div>
+                        <div class="form-group">
+                            <label>Modelo</label>
+                            <input type="text" id="carModel">
+                        </div>
+                        
+                        <div id="carSpecsContainer"></div>
+                        
+                        <div class="form-group">
+                            <label>Imágenes (hasta 10)</label>
+                            <input type="file" id="carImages" multiple accept="image/*" style="display:none">
+                            <div class="image-upload-area" onclick="document.getElementById('carImages').click()">
+                                <div style="font-size:3rem">📷</div>
+                                <div>Click para subir imágenes</div>
+                            </div>
+                            <div class="image-preview" id="imagePreview"></div>
+                        </div>
+                        
+                        <button class="btn-primary" onclick="saveCar()">Guardar</button>
+                        <button class="btn-secondary" onclick="cancelCarForm()">Cancelar</button>
+                    </div>
+                </div>
+
+                <!-- Specs Tab -->
+                <div id="specsTab" class="tab-content">
+                    <div class="form-group">
+                        <label>Añadir Nueva Característica</label>
+                        <input type="text" id="newSpecName" placeholder="Nombre (ej: Motor, Versión)">
+                        <button class="btn-primary" onclick="addSpec()" style="margin-top:0.5rem;">Añadir</button>
+                    </div>
+                    
+                    <div class="spec-manager">
+                        <h4>Características Actuales (arrastra para reordenar)</h4>
+                        <div id="specsList"></div>
+                    </div>
+                </div>
+
+                <!-- Logo Tab -->
+                <div id="logoTab" class="tab-content">
+                    <div class="form-group">
+                        <label>Logo de la Empresa</label>
+                        <input type="file" id="logoInput" accept="image/*" style="display:none">
+                        <div class="image-upload-area" onclick="document.getElementById('logoInput').click()">
+                            <div style="font-size:3rem">🏢</div>
+                            <div>Click para subir el logo</div>
+                            <div style="font-size:0.85rem; color:#999; margin-top:0.5rem">Recomendado: imagen cuadrada o circular</div>
+                        </div>
+                        <div class="image-preview" id="logoPreview" style="justify-content:center; margin-top:1rem;"></div>
+                    </div>
+                    <button class="btn-primary" onclick="saveLogo()">Guardar Logo</button>
+                </div>
+
+                <!-- Contact Tab -->
+                <div id="contactTab" class="tab-content">
+                    <div class="form-group">
+                        <label>Dirección</label>
+                        <input type="text" id="contactAddress" placeholder="Ej: Calle 50 N° 123, La Plata">
+                    </div>
+                    <div class="form-group">
+                        <label>WhatsApp</label>
+                        <input type="text" id="contactWhatsapp" placeholder="Ej: +54 9 221 123-4567">
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="text" id="contactPhone" placeholder="Ej: +54 221 123-4567">
+                    </div>
+                    <div class="form-group">
+                        <label>Instagram</label>
+                        <input type="text" id="contactInstagram" placeholder="Ej: https://instagram.com/alpinaautos">
+                    </div>
+                    <div class="form-group">
+                        <label>Google Maps (URL completa)</label>
+                        <input type="text" id="contactMaps" placeholder="Ej: https://maps.google.com/?q=...">
+                        <small style="color: #999; font-size: 0.8rem;">Abre Google Maps, busca tu dirección y copia la URL</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Horarios de Atención</label>
+                        <textarea id="contactHours" rows="3" style="width: 100%; padding: 0.625rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9375rem; font-family: inherit;" placeholder="Ej: Lunes a Viernes: 9:00 - 18:00&#10;Sábados: 9:00 - 13:00"></textarea>
+                        <small style="color: #999; font-size: 0.8rem;">Usa Enter para separar líneas</small>
+                    </div>
+                    <button class="btn-primary" onclick="saveContact()">Guardar Información de Contacto</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ADMIN_PASSWORD = '123santikucic456';
+        let isLoggedIn = false;
+        let currentImageIndex = {};
+        
+        // Data structures
+        let cars = [];
+        let availableSpecs = ['Año', 'Motor', 'Kilometraje', 'Versión', 'Precio'];
+        let contactInfo = {
+            whatsapp: '+54 9 11 1234-5678',
+            phone: '+54 221 123-4567',
+            instagram: 'https://instagram.com/alpinaautos',
+            maps: 'https://maps.google.com',
+            hours: 'Lunes a Viernes: 9:00 - 18:00<br>Sábados: 9:00 - 13:00',
+            address: 'Calle 123, La Plata, Buenos Aires'
+        };
+        let uploadedImages = [];
+        let logoBase64 = '';
+        let uploadedLogo = null;
+
+        // Netlify Blobs configuration
+        const NETLIFY_SITE_ID = 'YOUR_SITE_ID'; // This will be auto-detected
+        const BLOB_STORE_NAME = 'alpina-autos-data';
+        let isNetlifyEnvironment = false;
+
+        // Check if running on Netlify
+        function checkNetlifyEnvironment() {
+            isNetlifyEnvironment = window.location.hostname.includes('netlify.app') || 
+                                   window.location.hostname.includes('netlify.com');
+            return isNetlifyEnvironment;
+        }
+
+        // Initialize
+        function init() {
+            checkNetlifyEnvironment();
+            loadSampleData();
+            loadFromStorage();
+            renderCars();
+            updateContact();
+            loadLogo();
+            setupLogoUpload();
+        }
+
+        // Save to appropriate storage
+        async function saveToStorage() {
+            const data = {
+                cars: cars,
+                availableSpecs: availableSpecs,
+                contactInfo: contactInfo,
+                logoBase64: logoBase64
+            };
+            
+            if (isNetlifyEnvironment) {
+                try {
+                    // Save to Netlify Blobs
+                    await fetch('/.netlify/blobs/set', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            key: 'site-data',
+                            value: JSON.stringify(data)
+                        })
+                    });
+                    console.log('Data saved to Netlify Blobs');
+                } catch (error) {
+                    console.error('Error saving to Netlify:', error);
+                    // Fallback to localStorage
+                    localStorage.setItem('alpinaAutosData', JSON.stringify(data));
+                }
+            } else {
+                // Use localStorage for local development
+                localStorage.setItem('alpinaAutosData', JSON.stringify(data));
+            }
+        }
+
+        // Load from appropriate storage
+        async function loadFromStorage() {
+            try {
+                if (isNetlifyEnvironment) {
+                    // Try to load from Netlify Blobs
+                    const response = await fetch('/.netlify/blobs/get?key=site-data');
+                    if (response.ok) {
+                        const text = await response.text();
+                        if (text) {
+                            const data = JSON.parse(text);
+                            cars = data.cars || cars;
+                            availableSpecs = data.availableSpecs || availableSpecs;
+                            contactInfo = data.contactInfo || contactInfo;
+                            logoBase64 = data.logoBase64 || logoBase64;
+                            
+                            renderCars();
+                            updateContact();
+                            loadLogo();
+                            console.log('Data loaded from Netlify Blobs');
+                            return;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.log('Netlify Blobs not available, using localStorage');
+            }
+            
+            // Fallback to localStorage
+            const saved = localStorage.getItem('alpinaAutosData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                cars = data.cars || cars;
+                availableSpecs = data.availableSpecs || availableSpecs;
+                contactInfo = data.contactInfo || contactInfo;
+                logoBase64 = data.logoBase64 || logoBase64;
+                
+                renderCars();
+                updateContact();
+                loadLogo();
+            }
+        }
+
+        // Keep the old function for backward compatibility
+        function saveToLocalStorage() {
+            saveToStorage();
+        }
+
+        function loadFromLocalStorage() {
+            // This is now handled by loadFromStorage in init()
+        }
+
+        function setupLogoUpload() {
+            document.getElementById('logoInput').addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        uploadedLogo = event.target.result;
+                        displayLogoPreview();
+                    };
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+        }
+
+        function displayLogoPreview() {
+            const preview = document.getElementById('logoPreview');
+            if (uploadedLogo) {
+                preview.innerHTML = `
+                    <div class="preview-item" style="width: 150px;">
+                        <img src="${uploadedLogo}" class="preview-img" style="height: 150px;">
+                    </div>
+                `;
+            }
+        }
+
+        function saveLogo() {
+            if (uploadedLogo) {
+                logoBase64 = uploadedLogo;
+                loadLogo();
+                saveToLocalStorage();
+                alert('Logo guardado exitosamente');
+            }
+        }
+
+        function loadLogo() {
+            const img = document.getElementById('logoImg');
+            if (logoBase64) {
+                img.src = logoBase64;
+            }
+        }
+
+        // LocalStorage functions to persist data
+        function saveToLocalStorage() {
+            const data = {
+                cars: cars,
+                availableSpecs: availableSpecs,
+                contactInfo: contactInfo,
+                logoBase64: logoBase64
+            };
+            localStorage.setItem('alpinaAutosData', JSON.stringify(data));
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('alpinaAutosData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                cars = data.cars || cars;
+                availableSpecs = data.availableSpecs || availableSpecs;
+                contactInfo = data.contactInfo || contactInfo;
+                logoBase64 = data.logoBase64 || logoBase64;
+                
+                renderCars();
+                updateContact();
+                loadLogo();
+            }
+        }
+
+        function loadSampleData() {
+            cars = [
+                {
+                    id: 1,
+                    brand: 'Toyota',
+                    model: 'Corolla',
+                    specs: {
+                        'Año': '2020',
+                        'Motor': 'Gasolina 1.8',
+                        'Kilometraje': '45.000',
+                        'Versión': 'XEi',
+                        'Precio': 'USD $15.000'
+                    },
+                    images: ['data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23e5e5e5" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="20" fill="%23999"%3EToyota Corolla%3C/text%3E%3C/svg%3E']
+                }
+            ];
+        }
+
+        function loadLogo() {
+            // Tu logo se cargará aquí
+            const img = document.getElementById('logoImg');
+            if (logoBase64) {
+                img.src = logoBase64;
+            }
+        }
+
+        function renderCars() {
+            const grid = document.getElementById('carsGrid');
+            grid.innerHTML = cars.map(car => {
+                currentImageIndex[car.id] = 0;
+                const specs = Object.entries(car.specs || {}).filter(([key, value]) => value).map(([key, value]) => `
+                    <div class="spec-item">
+                        <span class="spec-label">${key}</span>
+                        <span class="spec-value">${value}</span>
+                    </div>
+                `).join('');
+                
+                return `
+                    <div class="car-card">
+                        <div class="car-image-container">
+                            <img src="${car.images[0]}" class="car-image" id="img${car.id}">
+                            ${car.images.length > 1 ? `
+                                <button class="image-nav prev" onclick="changeImage(${car.id}, -1)">‹</button>
+                                <button class="image-nav next" onclick="changeImage(${car.id}, 1)">›</button>
+                                <div class="image-dots">
+                                    ${car.images.map((_, i) => `<div class="dot ${i === 0 ? 'active' : ''}" data-id="${car.id}-${i}"></div>`).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="car-details">
+                            <h3 class="car-title">${car.brand} ${car.model}</h3>
+                            <div class="car-specs">
+                                ${specs}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function changeImage(carId, direction) {
+            const car = cars.find(c => c.id === carId);
+            if (!car || car.images.length <= 1) return;
+            
+            currentImageIndex[carId] = (currentImageIndex[carId] + direction + car.images.length) % car.images.length;
+            document.getElementById(`img${carId}`).src = car.images[currentImageIndex[carId]];
+            
+            const dots = document.querySelectorAll(`[data-id^="${carId}-"]`);
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentImageIndex[carId]);
+            });
+        }
+
+        function updateContact() {
+            document.getElementById('whatsappBtn').href = `https://wa.me/${contactInfo.whatsapp.replace(/[^0-9]/g, '')}`;
+            document.getElementById('whatsappText').textContent = contactInfo.whatsapp;
+            document.getElementById('phoneBtn').href = `tel:${contactInfo.phone}`;
+            document.getElementById('phoneText').textContent = contactInfo.phone;
+            document.getElementById('instagramBtn').href = contactInfo.instagram;
+            document.getElementById('instagramText').textContent = contactInfo.instagram.replace('https://', '').replace('instagram.com/', '@');
+            document.getElementById('mapsBtn').href = contactInfo.maps;
+            document.getElementById('businessHours').innerHTML = contactInfo.hours;
+            document.getElementById('companyAddress').textContent = contactInfo.address;
+            
+            // Update map iframe
+            if (contactInfo.maps && contactInfo.maps !== 'https://maps.google.com') {
+                // Extract coordinates or place ID from Maps URL
+                const mapFrame = document.getElementById('mapFrame');
+                // Try to convert maps URL to embed URL
+                let embedUrl = contactInfo.maps;
+                if (embedUrl.includes('maps.app.goo.gl') || embedUrl.includes('goo.gl')) {
+                    // Short URL - use as is in embed
+                    embedUrl = `https://www.google.com/maps?q=${encodeURIComponent(contactInfo.address)}&output=embed`;
+                } else if (embedUrl.includes('google.com/maps')) {
+                    // Try to convert to embed format
+                    if (!embedUrl.includes('/embed')) {
+                        embedUrl = embedUrl.replace('/maps/', '/maps/embed/');
+                        if (embedUrl.includes('?')) {
+                            embedUrl += '&output=embed';
+                        } else {
+                            embedUrl += '?output=embed';
+                        }
+                    }
+                }
+                mapFrame.src = embedUrl;
+            } else {
+                // Use address for map
+                const mapFrame = document.getElementById('mapFrame');
+                mapFrame.src = `https://www.google.com/maps?q=${encodeURIComponent(contactInfo.address)}&output=embed`;
+            }
+        }
+
+        // Admin functions
+        function showLogin() {
+            document.getElementById('adminPanel').classList.add('active');
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminPanel').classList.remove('active');
+        }
+
+        function login() {
+            if (document.getElementById('adminPassword').value === ADMIN_PASSWORD) {
+                document.getElementById('loginView').style.display = 'none';
+                document.getElementById('adminView').style.display = 'block';
+                renderAdminCars();
+                renderSpecs();
+                document.getElementById('contactAddress').value = contactInfo.address;
+                document.getElementById('contactWhatsapp').value = contactInfo.whatsapp;
+                document.getElementById('contactPhone').value = contactInfo.phone;
+                document.getElementById('contactInstagram').value = contactInfo.instagram;
+                document.getElementById('contactMaps').value = contactInfo.maps;
+                document.getElementById('contactHours').value = contactInfo.hours.replace(/<br>/g, '\n');
+                if (logoBase64) {
+                    uploadedLogo = logoBase64;
+                    displayLogoPreview();
+                }
+            } else {
+                alert('Contraseña incorrecta');
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tab + 'Tab').classList.add('active');
+        }
+
+        function renderAdminCars() {
+            document.getElementById('carsList').innerHTML = cars.map(car => `
+                <div class="spec-list-item">
+                    <span><strong>${car.brand} ${car.model}</strong></span>
+                    <div>
+                        <button class="btn-secondary" style="margin:0 0.5rem" onclick="editCar(${car.id})">Editar</button>
+                        <button class="btn-secondary" style="margin:0" onclick="deleteCar(${car.id})">Eliminar</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showAddCar() {
+            document.getElementById('formTitle').textContent = 'Añadir Auto';
+            document.getElementById('editCarId').value = '';
+            document.getElementById('carBrand').value = '';
+            document.getElementById('carModel').value = '';
+            renderCarSpecs({});
+            document.getElementById('imagePreview').innerHTML = '';
+            uploadedImages = [];
+            document.getElementById('carForm').style.display = 'block';
+        }
+
+        function renderCarSpecs(specs) {
+            document.getElementById('carSpecsContainer').innerHTML = availableSpecs.map(spec => `
+                <div class="form-group">
+                    <label>${spec}</label>
+                    <input type="text" id="spec_${spec}" value="${specs[spec] || ''}" placeholder="Dejar vacío para no mostrar">
+                </div>
+            `).join('');
+        }
+
+        function editCar(id) {
+            const car = cars.find(c => c.id === id);
+            document.getElementById('formTitle').textContent = 'Editar Auto';
+            document.getElementById('editCarId').value = id;
+            document.getElementById('carBrand').value = car.brand;
+            document.getElementById('carModel').value = car.model;
+            renderCarSpecs(car.specs);
+            uploadedImages = [...car.images];
+            renderImagePreview();
+            document.getElementById('carForm').style.display = 'block';
+        }
+
+        function deleteCar(id) {
+            if (confirm('¿Eliminar este auto?')) {
+                cars = cars.filter(c => c.id !== id);
+                renderCars();
+                renderAdminCars();
+                saveToLocalStorage();
+            }
+        }
+
+        document.getElementById('carImages').addEventListener('change', function(e) {
+            Array.from(e.target.files).forEach(file => {
+                if (uploadedImages.length < 10) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        uploadedImages.push(e.target.result);
+                        renderImagePreview();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        function renderImagePreview() {
+            document.getElementById('imagePreview').innerHTML = uploadedImages.map((img, i) => `
+                <div class="preview-item">
+                    <img src="${img}" class="preview-img">
+                    <button class="remove-image" onclick="removeImage(${i})">×</button>
+                </div>
+            `).join('');
+        }
+
+        function removeImage(index) {
+            uploadedImages.splice(index, 1);
+            renderImagePreview();
+        }
+
+        function saveCar() {
+            const id = document.getElementById('editCarId').value;
+            const specs = {};
+            availableSpecs.forEach(spec => {
+                const value = document.getElementById(`spec_${spec}`).value;
+                if (value) specs[spec] = value;
+            });
+            
+            const car = {
+                id: id ? parseInt(id) : Date.now(),
+                brand: document.getElementById('carBrand').value,
+                model: document.getElementById('carModel').value,
+                specs: specs,
+                images: uploadedImages.length ? uploadedImages : ['data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23e5e5e5" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="20" fill="%23999"%3ESin Imagen%3C/text%3E%3C/svg%3E']
+            };
+            
+            if (id) {
+                const index = cars.findIndex(c => c.id === parseInt(id));
+                cars[index] = car;
+            } else {
+                cars.push(car);
+            }
+            
+            renderCars();
+            renderAdminCars();
+            cancelCarForm();
+            saveToLocalStorage();
+        }
+
+        function cancelCarForm() {
+            document.getElementById('carForm').style.display = 'none';
+        }
+
+        function renderSpecs() {
+            document.getElementById('specsList').innerHTML = availableSpecs.map((spec, i) => `
+                <div class="spec-list-item" draggable="true" ondragstart="drag(event, ${i})" ondragover="allowDrop(event)" ondrop="drop(event, ${i})">
+                    <div>
+                        <span class="spec-handle">⋮⋮</span>
+                        <span>${spec}</span>
+                    </div>
+                    <button class="btn-secondary" onclick="removeSpec(${i})">Eliminar</button>
+                </div>
+            `).join('');
+        }
+
+        function addSpec() {
+            const name = document.getElementById('newSpecName').value.trim();
+            if (name && !availableSpecs.includes(name)) {
+                availableSpecs.push(name);
+                renderSpecs();
+                document.getElementById('newSpecName').value = '';
+                saveToLocalStorage();
+            }
+        }
+
+        function removeSpec(index) {
+            if (confirm('¿Eliminar esta característica?')) {
+                availableSpecs.splice(index, 1);
+                renderSpecs();
+                saveToLocalStorage();
+            }
+        }
+
+        let draggedIndex = null;
+        function drag(ev, index) {
+            draggedIndex = index;
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drop(ev, targetIndex) {
+            ev.preventDefault();
+            if (draggedIndex !== null && draggedIndex !== targetIndex) {
+                const item = availableSpecs.splice(draggedIndex, 1)[0];
+                availableSpecs.splice(targetIndex, 0, item);
+                renderSpecs();
+                saveToLocalStorage();
+            }
+        }
+
+        function saveContact() {
+            contactInfo = {
+                address: document.getElementById('contactAddress').value,
+                whatsapp: document.getElementById('contactWhatsapp').value,
+                phone: document.getElementById('contactPhone').value,
+                instagram: document.getElementById('contactInstagram').value,
+                maps: document.getElementById('contactMaps').value,
+                hours: document.getElementById('contactHours').value.replace(/\n/g, '<br>')
+            };
+            updateContact();
+            saveToLocalStorage();
+            alert('Información de contacto actualizada');
+        }
+
+        init();
+    </script>
+</body>
+</html>

@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "description": "Alpina Automotores - Concesionaria de Autos",
   "dependencies": {
-    "@netlify/blobs": "^6.2.0"
+    "node-fetch": "^2.6.7"
   }
 }

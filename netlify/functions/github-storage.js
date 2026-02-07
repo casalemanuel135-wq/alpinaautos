@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-
 exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -18,21 +16,28 @@ exports.handler = async (event) => {
   const FILE_PATH = 'data.json';
   const BRANCH = 'main';
 
+  if (!GITHUB_TOKEN) {
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: 'GITHUB_TOKEN not configured' })
+    };
+  }
+
   try {
     if (event.httpMethod === 'GET') {
-      // Get data from GitHub
       const response = await fetch(
         `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?ref=${BRANCH}`,
         {
           headers: {
             'Authorization': `token ${GITHUB_TOKEN}`,
-            'Accept': 'application/vnd.github.v3+json'
+            'Accept': 'application/vnd.github.v3+json',
+            'User-Agent': 'Netlify-Function'
           }
         }
       );
 
       if (response.status === 404) {
-        // File doesn't exist yet, return empty data
         return {
           statusCode: 200,
           headers,
@@ -51,17 +56,16 @@ exports.handler = async (event) => {
     }
 
     if (event.httpMethod === 'POST') {
-      // Save data to GitHub
       const newData = JSON.parse(event.body);
 
-      // First, try to get the current file to get its SHA
       let sha = null;
       const getResponse = await fetch(
         `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?ref=${BRANCH}`,
         {
           headers: {
             'Authorization': `token ${GITHUB_TOKEN}`,
-            'Accept': 'application/vnd.github.v3+json'
+            'Accept': 'application/vnd.github.v3+json',
+            'User-Agent': 'Netlify-Function'
           }
         }
       );
@@ -71,7 +75,6 @@ exports.handler = async (event) => {
         sha = currentFile.sha;
       }
 
-      // Update or create the file
       const content = Buffer.from(JSON.stringify(newData, null, 2)).toString('base64');
       
       const updateResponse = await fetch(
@@ -81,7 +84,8 @@ exports.handler = async (event) => {
           headers: {
             'Authorization': `token ${GITHUB_TOKEN}`,
             'Accept': 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'User-Agent': 'Netlify-Function'
           },
           body: JSON.stringify({
             message: 'Update site data',
@@ -94,7 +98,7 @@ exports.handler = async (event) => {
 
       if (!updateResponse.ok) {
         const error = await updateResponse.json();
-        throw new Error(error.message);
+        throw new Error(error.message || 'Error updating GitHub');
       }
 
       return {

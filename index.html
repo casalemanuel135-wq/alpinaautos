@@ -772,30 +772,14 @@
         let logoBase64 = '';
         let uploadedLogo = null;
 
-        // Netlify Blobs configuration
-        const NETLIFY_SITE_ID = 'YOUR_SITE_ID'; // This will be auto-detected
-        const BLOB_STORE_NAME = 'alpina-autos-data';
-        let isNetlifyEnvironment = false;
-
-        // Check if running on Netlify
-        function checkNetlifyEnvironment() {
-            isNetlifyEnvironment = window.location.hostname.includes('netlify.app') || 
-                                   window.location.hostname.includes('netlify.com');
-            return isNetlifyEnvironment;
-        }
-
         // Initialize
         function init() {
-            checkNetlifyEnvironment();
             loadSampleData();
             loadFromStorage();
-            renderCars();
-            updateContact();
-            loadLogo();
             setupLogoUpload();
         }
 
-        // Save to appropriate storage
+        // Save to GitHub via Netlify function
         async function saveToStorage() {
             const data = {
                 cars: cars,
@@ -804,54 +788,49 @@
                 logoBase64: logoBase64
             };
             
-            if (isNetlifyEnvironment) {
-                try {
-                    // Save to Netlify Blobs
-                    await fetch('/.netlify/blobs/set', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            key: 'site-data',
-                            value: JSON.stringify(data)
-                        })
-                    });
-                    console.log('Data saved to Netlify Blobs');
-                } catch (error) {
-                    console.error('Error saving to Netlify:', error);
-                    // Fallback to localStorage
+            try {
+                const response = await fetch('/.netlify/functions/github-storage', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    console.log('✅ Datos guardados en GitHub');
+                    return true;
+                } else {
+                    console.error('❌ Error guardando en GitHub');
                     localStorage.setItem('alpinaAutosData', JSON.stringify(data));
+                    return false;
                 }
-            } else {
-                // Use localStorage for local development
+            } catch (error) {
+                console.error('❌ Error:', error);
                 localStorage.setItem('alpinaAutosData', JSON.stringify(data));
+                return false;
             }
         }
 
-        // Load from appropriate storage
+        // Load from GitHub via Netlify function
         async function loadFromStorage() {
             try {
-                if (isNetlifyEnvironment) {
-                    // Try to load from Netlify Blobs
-                    const response = await fetch('/.netlify/blobs/get?key=site-data');
-                    if (response.ok) {
-                        const text = await response.text();
-                        if (text) {
-                            const data = JSON.parse(text);
-                            cars = data.cars || cars;
-                            availableSpecs = data.availableSpecs || availableSpecs;
-                            contactInfo = data.contactInfo || contactInfo;
-                            logoBase64 = data.logoBase64 || logoBase64;
-                            
-                            renderCars();
-                            updateContact();
-                            loadLogo();
-                            console.log('Data loaded from Netlify Blobs');
-                            return;
-                        }
+                const response = await fetch('/.netlify/functions/github-storage');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.cars) {
+                        cars = data.cars;
+                        availableSpecs = data.availableSpecs || availableSpecs;
+                        contactInfo = data.contactInfo || contactInfo;
+                        logoBase64 = data.logoBase64 || logoBase64;
+                        
+                        renderCars();
+                        updateContact();
+                        loadLogo();
+                        console.log('✅ Datos cargados desde GitHub');
+                        return;
                     }
                 }
             } catch (error) {
-                console.log('Netlify Blobs not available, using localStorage');
+                console.log('⚠️  GitHub no disponible, usando localStorage');
             }
             
             // Fallback to localStorage
@@ -866,16 +845,16 @@
                 renderCars();
                 updateContact();
                 loadLogo();
+            } else {
+                renderCars();
+                updateContact();
+                loadLogo();
             }
         }
 
-        // Keep the old function for backward compatibility
+        // Keep the old function name for compatibility
         function saveToLocalStorage() {
             saveToStorage();
-        }
-
-        function loadFromLocalStorage() {
-            // This is now handled by loadFromStorage in init()
         }
 
         function setupLogoUpload() {
@@ -918,32 +897,6 @@
             }
         }
 
-        // LocalStorage functions to persist data
-        function saveToLocalStorage() {
-            const data = {
-                cars: cars,
-                availableSpecs: availableSpecs,
-                contactInfo: contactInfo,
-                logoBase64: logoBase64
-            };
-            localStorage.setItem('alpinaAutosData', JSON.stringify(data));
-        }
-
-        function loadFromLocalStorage() {
-            const saved = localStorage.getItem('alpinaAutosData');
-            if (saved) {
-                const data = JSON.parse(saved);
-                cars = data.cars || cars;
-                availableSpecs = data.availableSpecs || availableSpecs;
-                contactInfo = data.contactInfo || contactInfo;
-                logoBase64 = data.logoBase64 || logoBase64;
-                
-                renderCars();
-                updateContact();
-                loadLogo();
-            }
-        }
-
         function loadSampleData() {
             cars = [
                 {
@@ -960,14 +913,6 @@
                     images: ['data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23e5e5e5" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="20" fill="%23999"%3EToyota Corolla%3C/text%3E%3C/svg%3E']
                 }
             ];
-        }
-
-        function loadLogo() {
-            // Tu logo se cargará aquí
-            const img = document.getElementById('logoImg');
-            if (logoBase64) {
-                img.src = logoBase64;
-            }
         }
 
         function renderCars() {
@@ -1030,15 +975,11 @@
             
             // Update map iframe
             if (contactInfo.maps && contactInfo.maps !== 'https://maps.google.com') {
-                // Extract coordinates or place ID from Maps URL
                 const mapFrame = document.getElementById('mapFrame');
-                // Try to convert maps URL to embed URL
                 let embedUrl = contactInfo.maps;
                 if (embedUrl.includes('maps.app.goo.gl') || embedUrl.includes('goo.gl')) {
-                    // Short URL - use as is in embed
                     embedUrl = `https://www.google.com/maps?q=${encodeURIComponent(contactInfo.address)}&output=embed`;
                 } else if (embedUrl.includes('google.com/maps')) {
-                    // Try to convert to embed format
                     if (!embedUrl.includes('/embed')) {
                         embedUrl = embedUrl.replace('/maps/', '/maps/embed/');
                         if (embedUrl.includes('?')) {
@@ -1050,7 +991,6 @@
                 }
                 mapFrame.src = embedUrl;
             } else {
-                // Use address for map
                 const mapFrame = document.getElementById('mapFrame');
                 mapFrame.src = `https://www.google.com/maps?q=${encodeURIComponent(contactInfo.address)}&output=embed`;
             }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alpina Automotores V2</title>
+    <title>Alpina Automotores</title>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
@@ -800,12 +800,12 @@
                     return true;
                 } else {
                     console.error('❌ Error guardando en GitHub');
-                    localStorage.setItem('alpinaAutosData', JSON.stringify(data));
+                    alert('Error al guardar. Por favor intenta de nuevo.');
                     return false;
                 }
             } catch (error) {
                 console.error('❌ Error:', error);
-                localStorage.setItem('alpinaAutosData', JSON.stringify(data));
+                alert('Error de conexión. Por favor intenta de nuevo.');
                 return false;
             }
         }
@@ -816,40 +816,33 @@
                 const response = await fetch('/.netlify/functions/github-storage');
                 if (response.ok) {
                     const data = await response.json();
-                    if (data.cars) {
-                        cars = data.cars;
-                        availableSpecs = data.availableSpecs || availableSpecs;
-                        contactInfo = data.contactInfo || contactInfo;
-                        logoBase64 = data.logoBase64 || logoBase64;
-                        
-                        renderCars();
-                        updateContact();
-                        loadLogo();
-                        console.log('✅ Datos cargados desde GitHub');
-                        return;
-                    }
+                    // Load data from GitHub - even if empty
+                    cars = data.cars || [];
+                    availableSpecs = data.availableSpecs || ['Año', 'Motor', 'Kilometraje', 'Versión', 'Precio'];
+                    contactInfo = data.contactInfo || {
+                        whatsapp: '+54 9 11 1234-5678',
+                        phone: '+54 221 123-4567',
+                        instagram: 'https://instagram.com/alpinaautos',
+                        maps: 'https://maps.google.com',
+                        hours: 'Lunes a Viernes: 9:00 - 18:00<br>Sábados: 9:00 - 13:00',
+                        address: 'Calle 123, La Plata, Buenos Aires'
+                    };
+                    logoBase64 = data.logoBase64 || '';
+                    
+                    renderCars();
+                    updateContact();
+                    loadLogo();
+                    console.log('✅ Datos cargados desde GitHub');
+                    return;
                 }
             } catch (error) {
-                console.log('⚠️  GitHub no disponible, usando localStorage');
+                console.error('❌ Error cargando desde GitHub:', error);
             }
             
-            // Fallback to localStorage
-            const saved = localStorage.getItem('alpinaAutosData');
-            if (saved) {
-                const data = JSON.parse(saved);
-                cars = data.cars || cars;
-                availableSpecs = data.availableSpecs || availableSpecs;
-                contactInfo = data.contactInfo || contactInfo;
-                logoBase64 = data.logoBase64 || logoBase64;
-                
-                renderCars();
-                updateContact();
-                loadLogo();
-            } else {
-                renderCars();
-                updateContact();
-                loadLogo();
-            }
+            // If GitHub fails, use defaults
+            renderCars();
+            updateContact();
+            loadLogo();
         }
 
         // Keep the old function name for compatibility
@@ -897,6 +890,32 @@
             }
         }
 
+        // LocalStorage functions to persist data
+        function saveToLocalStorage() {
+            const data = {
+                cars: cars,
+                availableSpecs: availableSpecs,
+                contactInfo: contactInfo,
+                logoBase64: logoBase64
+            };
+            localStorage.setItem('alpinaAutosData', JSON.stringify(data));
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('alpinaAutosData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                cars = data.cars || cars;
+                availableSpecs = data.availableSpecs || availableSpecs;
+                contactInfo = data.contactInfo || contactInfo;
+                logoBase64 = data.logoBase64 || logoBase64;
+                
+                renderCars();
+                updateContact();
+                loadLogo();
+            }
+        }
+
         function loadSampleData() {
             cars = [
                 {
@@ -913,6 +932,14 @@
                     images: ['data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23e5e5e5" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="20" fill="%23999"%3EToyota Corolla%3C/text%3E%3C/svg%3E']
                 }
             ];
+        }
+
+        function loadLogo() {
+            // Tu logo se cargará aquí
+            const img = document.getElementById('logoImg');
+            if (logoBase64) {
+                img.src = logoBase64;
+            }
         }
 
         function renderCars() {
@@ -975,11 +1002,15 @@
             
             // Update map iframe
             if (contactInfo.maps && contactInfo.maps !== 'https://maps.google.com') {
+                // Extract coordinates or place ID from Maps URL
                 const mapFrame = document.getElementById('mapFrame');
+                // Try to convert maps URL to embed URL
                 let embedUrl = contactInfo.maps;
                 if (embedUrl.includes('maps.app.goo.gl') || embedUrl.includes('goo.gl')) {
+                    // Short URL - use as is in embed
                     embedUrl = `https://www.google.com/maps?q=${encodeURIComponent(contactInfo.address)}&output=embed`;
                 } else if (embedUrl.includes('google.com/maps')) {
+                    // Try to convert to embed format
                     if (!embedUrl.includes('/embed')) {
                         embedUrl = embedUrl.replace('/maps/', '/maps/embed/');
                         if (embedUrl.includes('?')) {
@@ -991,6 +1022,7 @@
                 }
                 mapFrame.src = embedUrl;
             } else {
+                // Use address for map
                 const mapFrame = document.getElementById('mapFrame');
                 mapFrame.src = `https://www.google.com/maps?q=${encodeURIComponent(contactInfo.address)}&output=embed`;
             }

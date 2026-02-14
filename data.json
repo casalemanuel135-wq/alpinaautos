@@ -1,4 +1,19 @@
 {
   "cars": [],
-  "test": true
+  "availableSpecs": [
+    "Año",
+    "Motor",
+    "Kilometraje",
+    "Versión",
+    "Precio"
+  ],
+  "contactInfo": {
+    "address": "90 entre 11 y 12",
+    "whatsapp": "123456789",
+    "phone": "+54 221 123-4567",
+    "instagram": "https://instagram.com/alpinaautos",
+    "maps": "https://maps.google.com",
+    "hours": "Lunes a Viernes: 9:00 - 18:00<br>Sábados: 9:00 - 13:00"
+  },
+  "logoBase64": ""
 }
